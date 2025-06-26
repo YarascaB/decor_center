@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8" />
-    <title>Formulario</title>
+@extends('layouts.app')
+
+@section('content')
     <link rel="stylesheet" href="{{ asset('css/formulario.css') }}">
-</head>
-<body>
 
     <form class="form" method="POST" action="{{ route('login') }}">
         @csrf
@@ -15,9 +11,7 @@
             <label>Email</label>
         </div>
         <div class="inputForm">
-            <!-- Ícono SVG -->
-            <!-- (Puedes dejarlo igual) -->
-            <input placeholder="Enter your Email" class="input" type="email" name="email" :value="old('email')" required autofocus>
+            <input placeholder="Enter your Email" class="input" type="email" name="email" value="{{ old('email') }}" required autofocus>
         </div>
         @if($errors->has('email'))
             <span style="color:red; font-size:12px;">{{ $errors->first('email') }}</span>
@@ -28,7 +22,6 @@
             <label>Password</label>
         </div>
         <div class="inputForm">
-            <!-- Ícono SVG -->
             <input placeholder="Enter your Password" class="input" type="password" name="password" required>
         </div>
         @if($errors->has('password'))
@@ -68,6 +61,4 @@
           Al continuar con Google, se registrará automáticamente si aún no tiene una cuenta.
         </p>
     </form>
-
-</body>
-</html>
+@endsection
