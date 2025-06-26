@@ -1,26 +1,47 @@
-FROM php:8.2-cli
+# Usa PHP 8.2 con Apache
+FROM php:8.2-apache
 
-# Instalar extensiones necesarias
+# Instala extensiones necesarias para Laravel y PostgreSQL
 RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    zip \
     unzip \
-    curl \
-    libpq-dev \
     git \
+    curl \
+    libonig-dev \
+    libxml2-dev \
     libzip-dev \
-    && docker-php-ext-install pdo pdo_pgsql zip
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Instalar Composer
+# Habilita mod_rewrite
+RUN a2enmod rewrite
+
+# Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copiar tu proyecto Laravel
-COPY . /app
-WORKDIR /app
+# Copia tu proyecto Laravel
+COPY . /var/www/html
 
-# Instalar dependencias
+# Cambia permisos
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+
+# Establece el directorio de trabajo
+WORKDIR /var/www/html
+
+# Instala dependencias
 RUN composer install --optimize-autoloader --no-dev
 
-# Exponer el puerto que usará Laravel (Render lo define automáticamente)
-EXPOSE 8000
+# Copia el .env si no existe
+RUN cp .env.example .env || true
 
-# Comando para iniciar el servidor Laravel
-CMD php artisan serve --host=0.0.0.0 --port=${PORT}
+# Genera la clave de la app
+RUN php artisan key:generate
+
+# Exponer puerto 80
+EXPOSE 80
+
+# Comando de inicio (Render lo sobrescribirá con el Docker Command si lo configuraste)
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=80"]
