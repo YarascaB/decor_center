@@ -91,6 +91,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 Route::get('/api/productos-mas-vendidos', [ReporteController::class, 'apiProductosMasVendidos'])->name('api.productos-mas-vendidos');
 
+
+Route::get('/verificar-rol', function () {
+    dd(Auth::user()->hasRole('admin'));
+});
+
 // Cargar las rutas de autenticación generadas por Breeze u otra configuración
 require __DIR__.'/auth.php';
 
