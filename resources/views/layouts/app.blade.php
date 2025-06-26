@@ -20,7 +20,9 @@
         @yield('styles')
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="stylesheet" href="{{ asset('build/assets/app-bd2bb039.css') }}">
+        <script src="{{ asset('build/assets/app-eff04317.js') }}" defer></script>
+
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
